@@ -49,6 +49,7 @@ jobs:
         git config --local user.name "SEUNGTO"
         git add test_resultDict.json
         git commit -m "update data"
+        git config --local credential.helper ""
     - name: push
       uses : ad-m/github-push-action@master
       with :
