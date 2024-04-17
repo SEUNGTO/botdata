@@ -6,6 +6,7 @@ name: Python package
 on:
   push:
     branches: [ "main" ]
+    permissions: write-all
   pull_request:
     branches: [ "main" ]
 
