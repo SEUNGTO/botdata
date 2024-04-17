@@ -101,5 +101,5 @@ if __name__ == '__main__' :
         for date in resultDict[code].keys() :
             resultDict[code][date] = resultDict[code][date].to_dict()
 
-    with open('test_resultDict.json', 'w') as f :
+    with open('resultDict.json', 'w') as f :
         json.dump(resultDict, f)
