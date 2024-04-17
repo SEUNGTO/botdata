@@ -10,7 +10,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
+  schedule:
+    # 한국시간 평일 17시
+    - cron: '0 2 * * 2-6'
+
 jobs:
+  
   build:
 
     runs-on: ubuntu-latest
