@@ -82,7 +82,7 @@ if __name__ == '__main__' :
 
     date = time.strftime('%Y%m%d')
 
-    for isuCd, code, name in tqdm(zip(codeList['표준코드'], codeList['단축코드'], codeList['한글종목약명'])) :
+    for isuCd, code, name in zip(codeList['표준코드'], codeList['단축코드'], codeList['한글종목약명']) :
         data = PDFListing(isuCd, code, name, date)
         if code not in resultDict.keys() :
             tmpDict = {}
