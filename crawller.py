@@ -77,7 +77,6 @@ if __name__ == '__main__' :
     # 코드 불러오기
     codeList = codeListing()
     codeList = codeList[(codeList['기초시장분류'] == '국내') & (codeList['기초자산분류'] == '주식')]
-    codeList = codeList.reset_index(drop = True).iloc[0:5, :]
 
     # 기존 데이터 불러오기
     resultDict = loadData()
@@ -97,7 +96,6 @@ if __name__ == '__main__' :
         else :
             resultDict[code][date] = data
             time.sleep(0.5)
-
 
     for code in resultDict.keys() :
         for date in resultDict[code].keys() :
