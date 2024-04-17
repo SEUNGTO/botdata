@@ -19,6 +19,10 @@ jobs:
         python-version: ["3.9"]
 
     steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        fetch-depth: 0
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
@@ -47,5 +51,5 @@ jobs:
     - name: push
       uses : ad-m/github-push-action@master
       with :
-         branch : 'main'
+         branch : ${{ gitgub.ref }}
          github_token : ${{ secrets.TOKEN }}
