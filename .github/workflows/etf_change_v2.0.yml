@@ -43,7 +43,7 @@ jobs:
         git config --local user.email "tmdduq9008@gmail.com"
         git config --local user.name "SEUNGTO"
         git add test_resultDict.json
-        git commit -mn "Auto - update data"
+        git commit -m "update data"
     - name: push
       uses : ad-m/github-push-action@master
       with :
