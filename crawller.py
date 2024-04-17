@@ -3,6 +3,8 @@ import time
 import json
 import requests
 import pandas as pd
+import pytz
+from datetime import datetime
 
 def codeListing() :
 
@@ -80,7 +82,10 @@ if __name__ == '__main__' :
     # 기존 데이터 불러오기
     resultDict = loadData()
 
-    date = time.strftime('%Y%m%d')
+    # 오늘 날짜 세팅
+    tz = pytz.timezone('Asia/Seoul')
+    now = datetime.now(tz)
+    date = now.strftime('%Y%m%d')
 
     for isuCd, code, name in zip(codeList['표준코드'], codeList['단축코드'], codeList['한글종목약명']) :
         data = PDFListing(isuCd, code, name, date)
