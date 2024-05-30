@@ -1,10 +1,9 @@
 import io
 import time
-import json
 import requests
 import pandas as pd
 import pytz
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def codeListing() :
 
@@ -59,47 +58,30 @@ def PDFListing(isuCd, code, name, date) :
 
     return data
 
+def dataCrawlling(codeList, date):
 
-def loadData() :
 
-    url = 'https://raw.githubusercontent.com/SEUNGTO/botdata/main/resultDict.json'
-    response = requests.get(url)
-    resultDict = response.json()
+    for i, (isuCd, code, name) in enumerate(zip(codeList['표준코드'], codeList['단축코드'], codeList['한글종목약명'])):
 
-    for code in resultDict.keys() :
-        for date in resultDict[code].keys() :
-            resultDict[code][date] = pd.DataFrame(resultDict[code][date])
-
-    return resultDict
-
-if __name__ == '__main__' :
-
-    # 코드 불러오기
-    codeList = codeListing()
-    codeList = codeList[(codeList['기초시장분류'] == '국내') & (codeList['기초자산분류'] == '주식')]
-
-    # 기존 데이터 불러오기
-    resultDict = loadData()
-
-    # 오늘 날짜 세팅
-    tz = pytz.timezone('Asia/Seoul')
-    now = datetime.now(tz)
-    date = now.strftime('%Y%m%d')
-
-    for isuCd, code, name in zip(codeList['표준코드'], codeList['단축코드'], codeList['한글종목약명']) :
-        data = PDFListing(isuCd, code, name, date)
-        if code not in resultDict.keys() :
-            tmpDict = {}
-            tmpDict[date] = data
-            resultDict[code] = tmpDict
+        if i == 0:
+            data = PDFListing(isuCd, code, name, date)
+            data.insert(0, 'ETF코드', code)
+            data = data.drop(['시가총액', '시가총액 구성비중'], axis = 1)
+            data.loc[:, '비중'] = data['평가금액']/data['평가금액'].sum() * 100
             time.sleep(0.5)
+
         else :
-            resultDict[code][date] = data
+            tmp = PDFListing(isuCd, code, name, date)
+            tmp.insert(0, 'ETF코드', code)
+            tmp = tmp.drop(['시가총액', '시가총액 구성비중'], axis = 1)
+            tmp.loc[:, '비중'] = tmp['평가금액']/tmp['평가금액'].sum() * 100
+            data = pd.concat([data, tmp])
             time.sleep(0.5)
 
-    for code in resultDict.keys() :
-        for date in resultDict[code].keys() :
-            resultDict[code][date] = resultDict[code][date].to_dict()
 
-    with open('resultDict.json', 'w') as f :
-        json.dump(resultDict, f)
+        else : break
+
+
+    data.columns = ['etf_code', 'stock_code', 'stock_nm', 'stock_amn', 'evl_amt', 'ratio']
+
+    return data.reset_index(drop = True)
